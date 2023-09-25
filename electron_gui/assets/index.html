@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel="stylesheet" href="styles.css"/>
+    <meta charset="UTF-8"/>
+    <title>IoT CRI Interpreter</title>
+</head>
+
+<body>
+<h1>IoT CRI Interpreter</h1>
+<br/>
+<div class="select-grid">
+    <div class="input-group">
+        <p>Trigger device</p>
+        <p>
+            <select id="trigger_device" class="minimal">
+                <option>Select a trigger device</option>
+            </select>
+        </p>
+        <p>Trigger condition</p>
+        <p>
+            <select id="trigger_condition" class="minimal">
+                <option>Select a trigger condition</option>
+            </select>
+        </p>
+        <p>Trigger DSN</p>
+        <p>
+            <select id="trigger_DSN" class="minimal">
+                <option>Select which device</option>
+            </select>
+        </p>
+    </div>
+    <div class="input-group">
+        <p>Query Device</p>
+        <p>
+            <select id="query_device" class="minimal">
+                <option>Select a query device</option>
+            </select>
+        </p>
+        <p>Query Content</p>
+        <p>
+            <select id="query_content" class="minimal">
+                <option>Select a query content</option>
+            </select>
+        </p>
+        <p>Query DSN</p>
+        <p>
+            <select id="query_DSN" class="minimal">
+                <option>Select which device</option>
+            </select>
+        </p>
+    </div>
+    <div class="input-group">
+        <p>Action device</p>
+        <p>
+            <select id="action_device" class="minimal">
+                <option>Select an action device</option>
+            </select>
+        </p>
+        <p>Action execution</p>
+        <p>
+            <select id="action_execution" class="minimal">
+                <option>Select an action execution</option>
+            </select>
+        </p>
+        <p>Action DSN</p>
+        <p>
+            <select id="action_DSN" class="minimal">
+                <option>Select which device</option>
+            </select>
+        </p>
+    </div>
+    <div class="input-group">
+        <p><input type="checkbox" id="pro_chk" name="pro_chk" value="pro_chk"/></p>
+        <label for="pro_chk">I'm Pro.</label>
+        <p>Priority</p>
+        <select id="priority" class="minimal">
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+            <option value="4">4</option>
+            <option value="5">5</option>
+        </select>
+    </div>
+</div>
+<br/>
+
+
+<div style="text-align: center">
+    <button id="refresh_button">Refresh</button>
+    <button id="start_button">Start!</button>
+</div>
+</body>
+</html>
