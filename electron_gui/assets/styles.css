@@ -1,68 +1,89 @@
 body {
-  font-family: Arial, sans-serif;
-  background-color: #f0f0f0;
-  margin: 0;
-  padding: 0;
+    font-family: Arial, sans-serif;
+    background-color: #f0f0f0;
+    margin: 0;
+    padding: 0;
 }
 
+
 h1 {
-  text-align: center;
-  color: #333;
-  margin-top: 20px;
+    text-align: center;
+    color: #333;
+    margin-top: 20px;
 }
 
 .select-grid {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-between;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
 }
 
 .input-group {
-  flex: 1;
-  margin: 10px;
-  padding: 10px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-  background-color: #f5f5f5;
+    flex: 1;
+    margin: 10px;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background-color: #f5f5f5;
 }
 
-select, input[type="checkbox"] {
-  width: 100%;
-  padding: 5px;
-  margin-bottom: 10px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
+
+select {
+    width: 100%;
+    padding: 5px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+input[type="checkbox"] {
+    width: 30%;
+    padding: 5px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+input[type="number"] {
+    width: 96.5%;
+    padding: 5px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+::placeholder {
+    font-family: Arial, sans-serif;
 }
 
 p {
-  font-weight: bold;
-  margin: 0;
-  padding: 5px 0;
+    font-weight: bold;
+    margin: 0;
+    padding: 5px 0;
 }
 
 
-
 button {
-  display: block;
-  width: 100%; /* 自动适应内容宽度 */
-  padding: 8px 16px; /* 调整按钮内边距，使其更加紧凑 */
-  margin: 0 auto; /* 水平居中 */
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  background-color: #007bff;
-  color: #fff;
-  cursor: pointer;
+    display: block;
+    width: 100%; /* 自动适应内容宽度 */
+    padding: 8px 16px; /* 调整按钮内边距，使其更加紧凑 */
+    margin: 0 auto; /* 水平居中 */
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    background-color: #007bff;
+    color: #fff;
+    cursor: pointer;
 }
 
 
 button:hover {
-  background-color: #0056b3;
+    background-color: #0056b3;
 }
 
 button#refresh_button {
-  background-color: #6c757d;
+    background-color: #6c757d;
 }
 
 button#refresh_button:hover {
-  background-color: #555e66;
+    background-color: #555e66;
 }

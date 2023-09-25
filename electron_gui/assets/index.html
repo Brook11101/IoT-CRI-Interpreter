@@ -23,7 +23,13 @@
                 <option>Select a trigger condition</option>
             </select>
         </p>
-        <p>Trigger DSN</p>
+        <p>Device Account</p>
+        <p>
+            <select id="trigger_DAC" class="minimal">
+                <option>Select which account</option>
+            </select>
+        </p>
+        <p>Device Name</p>
         <p>
             <select id="trigger_DSN" class="minimal">
                 <option>Select which device</option>
@@ -43,7 +49,13 @@
                 <option>Select a query content</option>
             </select>
         </p>
-        <p>Query DSN</p>
+        <p>Device Account</p>
+        <p>
+            <select id="query_DAC" class="minimal">
+                <option>Select which account</option>
+            </select>
+        </p>
+        <p>Device Name</p>
         <p>
             <select id="query_DSN" class="minimal">
                 <option>Select which device</option>
@@ -63,7 +75,13 @@
                 <option>Select an action execution</option>
             </select>
         </p>
-        <p>Action DSN</p>
+        <p>Device Account</p>
+        <p>
+            <select id="action_DAC" class="minimal">
+                <option>Select which account</option>
+            </select>
+        </p>
+        <p>Device Name</p>
         <p>
             <select id="action_DSN" class="minimal">
                 <option>Select which device</option>
@@ -71,16 +89,36 @@
         </p>
     </div>
     <div class="input-group">
-        <p><input type="checkbox" id="pro_chk" name="pro_chk" value="pro_chk"/></p>
-        <label for="pro_chk">I'm Pro.</label>
+
+        <p>
+            <label for="pro_chk">I am an expert
+                <input style="vertical-align:middle" type="checkbox" id="pro_chk" name="pro_chk"
+                       value="pro_chk"></input>
+            </label>
+        </p>
+
         <p>Priority</p>
-        <select id="priority" class="minimal">
-            <option value="1">1</option>
-            <option value="2">2</option>
-            <option value="3">3</option>
-            <option value="4">4</option>
-            <option value="5">5</option>
-        </select>
+        <p>
+            <select id="priority" class="minimal">
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+                <option value="5">5</option>
+            </select>
+        </p>
+        <p>Time Window Length</p>
+        <p>
+            <input type="number" id="timewindow" name="timewindow" placeholder="Enter time window...">
+        </p>
+
+        <p>CRI Preference</p>
+        <p>
+            <select id="cri_preference" class="minimal">
+                <option value="0">Only race condition CRI</option>
+                <option value="1">All CRI</option>
+            </select>
+        </p>
     </div>
 </div>
 <br/>
