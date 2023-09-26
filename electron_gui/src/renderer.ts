@@ -81,19 +81,19 @@ function getAllSelects() {
     let priority = document.getElementById("priority") as HTMLSelectElement;
 
     return {
-        trigger_device: trigger_device.options[trigger_device.selectedIndex].text,
+        trigger_device: trigger_device.options[trigger_device.selectedIndex].value,
         trigger_condition:
-        trigger_condition.options[trigger_condition.selectedIndex].text,
-        trigger_DAC: trigger_DAC.options[trigger_DAC.selectedIndex].text,
-        trigger_DSN: trigger_DSN.options[trigger_DSN.selectedIndex].text,
-        query_device: query_device.options[query_device.selectedIndex].text,
-        query_content: query_content.options[query_content.selectedIndex].text,
-        query_DAC: query_DAC.options[query_DAC.selectedIndex].text,
-        query_DSN: query_DSN.options[query_DSN.selectedIndex].text,
-        action_device: action_device.options[action_device.selectedIndex].text,
-        action_execution: action_execution.options[action_execution.selectedIndex].text,
-        action_DAC: action_DAC.options[action_DAC.selectedIndex].text,
-        action_DSN: action_DSN.options[action_DSN.selectedIndex].text,
+        trigger_condition.options[trigger_condition.selectedIndex].value,
+        trigger_DAC: trigger_DAC.options[trigger_DAC.selectedIndex].value,
+        trigger_DSN: trigger_DSN.options[trigger_DSN.selectedIndex].value,
+        query_device: query_device.options[query_device.selectedIndex].value,
+        query_content: query_content.options[query_content.selectedIndex].value,
+        query_DAC: query_DAC.options[query_DAC.selectedIndex].value,
+        query_DSN: query_DSN.options[query_DSN.selectedIndex].value,
+        action_device: action_device.options[action_device.selectedIndex].value,
+        action_execution: action_execution.options[action_execution.selectedIndex].value,
+        action_DAC: action_DAC.options[action_DAC.selectedIndex].value,
+        action_DSN: action_DSN.options[action_DSN.selectedIndex].value,
         is_pro: is_pro.checked,
         priority: priority.options[priority.selectedIndex].text,
     };

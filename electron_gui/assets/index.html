@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <html>
 <head>
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.22.3/min/vs/editor/editor.main.css">
     <link rel="stylesheet" href="styles.css"/>
     <meta charset="UTF-8"/>
     <title>IoT CRI Interpreter</title>
@@ -123,10 +125,16 @@
 </div>
 <br/>
 
-
+<div id="editor"></div>
+<br/>
 <div style="text-align: center">
     <button id="refresh_button">Refresh</button>
     <button id="start_button">Start!</button>
 </div>
 </body>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.22.3/min/vs/loader.js"></script>
+<!-- 初始化 Monaco Editor -->
+<script src="script.js"></script>
+
 </html>
