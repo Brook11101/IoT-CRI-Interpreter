@@ -8,12 +8,15 @@ import {spawn} from "child_process";
 interface PythonArgs {
     trigger_device: string;
     trigger_condition: string;
+    trigger_DAC: string;
     trigger_DSN: string;
     query_device: string;
     query_content: string;
+    query_DAC: string;
     query_DSN: string;
     action_device: string;
     action_execution: string;
+    action_DAC: string;
     action_DSN: string;
     is_pro: boolean;
     priority: string;
@@ -24,12 +27,15 @@ function runPythonScript(args: PythonArgs): void {
         "../applet_executor/applet_executor.py",
         args["trigger_device"],
         args["trigger_condition"],
+        args["trigger_DAC"],
         args["trigger_DSN"],
         args["query_device"],
         args["query_content"],
+        args["query_DAC"],
         args["query_DSN"],
         args["action_device"],
         args["action_execution"],
+        args["query_DAC"],
         args["action_DSN"],
         String(args["is_pro"]),
         args["priority"],
@@ -111,4 +117,26 @@ ipcMain.on("action_device_change", (event, arg) => {
         "../../data/electron_json/action/" + module_name + ".json"
     );
     win.webContents.send("update-action-execution", nameObj);
+});
+
+ipcMain.on("trigger_DAC_change", (event, select_trigger, select_account) => {
+    console.log(select_trigger+"   "+select_account);
+    let trigger_json = readJsonFile(
+        "../../data/electron_json/trigger/" + select_trigger + ".json"
+    );
+    win.webContents.send("update-trigger-DSN", trigger_json, select_account);
+});
+
+ipcMain.on("query_DAC_change", (event, select_query, select_account) => {
+    let query_json = readJsonFile(
+        "../../data/electron_json/query/" + select_query + ".json"
+    );
+    win.webContents.send("update-query-DSN", query_json, select_account);
+});
+
+ipcMain.on("action_DAC_change", (event, select_action, select_account) => {
+    let action_json = readJsonFile(
+        "../../data/electron_json/action/" + select_action + ".json"
+    );
+    win.webContents.send("update-action-DSN", action_json, select_account);
 });
