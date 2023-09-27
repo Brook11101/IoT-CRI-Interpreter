@@ -15,18 +15,30 @@ function refreshSelect(elem: HTMLSelectElement, selectDict: object) {
 
 function refreshDACSelect(elem: HTMLSelectElement, selectDict: object) {
     elem.innerHTML = "";
+    let optionsAdded = false; // 用于跟踪是否已经添加了选项
+
     for (let item of Object.values(selectDict)[0]["live_channels"]) {
         if (item["offline"] != "true") {
             let option = document.createElement("option");
             option.value = item["id"];
             option.text = item["user_name_field"];
             elem.add(option);
+            optionsAdded = true;
         }
+    }
+
+    if (!optionsAdded) {
+        let option = document.createElement("option");
+        option.value = "no_DAC_data";
+        option.text = "No bounded account";
+        elem.add(option);
     }
 }
 
 function refreshDSNSelect(elem: HTMLSelectElement, json_dict: object, select_account: string) {
     elem.innerHTML = "";
+    let optionsAdded = false; // 用于跟踪是否已经添加了选项
+
     for (let item of Object.values(json_dict)[0]["live_channels"]) {
         if (item["id"] == select_account) {
             for (let mac of item["macaddress"]) {
@@ -34,9 +46,17 @@ function refreshDSNSelect(elem: HTMLSelectElement, json_dict: object, select_acc
                 option.value = mac["value"];
                 option.text = mac["label"];
                 elem.add(option);
+                optionsAdded = true;
             }
         }
     }
+    if (!optionsAdded) {
+        let option = document.createElement("option");
+        option.value = "no_DSN_data";
+        option.text = "No bounded device";
+        elem.add(option);
+    }
+
 }
 
 function getAllSelects() {

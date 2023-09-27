@@ -22,34 +22,39 @@ interface PythonArgs {
     priority: string;
 }
 
-function runPythonScript(args: PythonArgs): void {
-    const python = spawn("python", [
-        "../applet_executor/applet_executor.py",
-        args["trigger_device"],
-        args["trigger_condition"],
-        args["trigger_DAC"],
-        args["trigger_DSN"],
-        args["query_device"],
-        args["query_content"],
-        args["query_DAC"],
-        args["query_DSN"],
-        args["action_device"],
-        args["action_execution"],
-        args["query_DAC"],
-        args["action_DSN"],
-        String(args["is_pro"]),
-        args["priority"],
-    ]);
+function runPythonScript(args: PythonArgs) {
+    // 定义要执行的命令和参数
+    const command = "scrapy";
+    const commandArgs = [
+        "runspider",
+        "-a","trigger_device="+args.trigger_device,
+        "-a","trigger_condition="+args.trigger_condition,
+        "-a","trigger_DAC="+args.trigger_DAC,
+        "-a","trigger_DSN="+args.trigger_DSN,
+        "-a","query_device="+args.query_device,
+        "-a","query_content="+args.query_content,
+        "-a","query_DAC="+args.query_DAC,
+        "-a","query_DSN="+args.query_DSN,
+        "-a","action_device="+args.action_device,
+        "-a","action_execution="+args.action_execution,
+        "-a","action_DAC="+args.action_DAC,
+        "-a","action_DSN="+args.action_DSN,
+        "-a","is_pro="+String(args["is_pro"]),
+        "-a","priority="+args.priority,
+        "../applet_executor/ifttt_rule_creator.py",
+    ];
 
-    python.stdout.on("data", (data: Buffer) => {
+    const python = spawn(command, commandArgs);
+    python.on('error', (error) => {
+        console.error(`spawn error: ${error.message}`);
+    });
+    python.stdout.on("data", (data) => {
         console.log(`stdout: ${data.toString()}`);
     });
-
-    python.stderr.on("data", (data: Buffer) => {
+    python.stderr.on("data", (data) => {
         console.error(`stderr: ${data.toString()}`);
     });
-
-    python.on("close", (code: number) => {
+    python.on("close", (code) => {
         console.log(`child process exited with code ${code}`);
     });
 }
@@ -120,7 +125,7 @@ ipcMain.on("action_device_change", (event, arg) => {
 });
 
 ipcMain.on("trigger_DAC_change", (event, select_trigger, select_account) => {
-    console.log(select_trigger+"   "+select_account);
+    //此处可以直接传value值而不是text值
     let trigger_json = readJsonFile(
         "../../data/electron_json/trigger/" + select_trigger + ".json"
     );
