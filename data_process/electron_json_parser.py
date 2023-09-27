@@ -69,6 +69,7 @@ class ElectronJsonParser:
                         {
                             "name": fields["name"],
                             "label": fields["label"],
+                            "hideable": fields["hideable"],
                             "helper_text": fields["helper_text"],
                         }
                         for fields in item["trigger_fields"]
@@ -78,6 +79,7 @@ class ElectronJsonParser:
                         {
                             "id": ingre["id"],
                             "name": ingre["name"],
+                            "normalized_name": ingre["normalized_name"],
                             "note": ingre["note"],
                             "value_type": ingre["value_type"],
                         }
@@ -106,6 +108,7 @@ class ElectronJsonParser:
                         {
                             "name": fields["name"],
                             "label": fields["label"],
+                            "hideable": fields["hideable"],
                             "helper_text": fields["helper_text"],
                         }
                         for fields in item["query_fields"]
@@ -115,6 +118,7 @@ class ElectronJsonParser:
                         {
                             "id": ingre["id"],
                             "name": ingre["name"],
+                            "normalized_name": ingre["normalized_name"],
                             "note": ingre["note"],
                             "value_type": ingre["value_type"],
                         }
@@ -141,6 +145,7 @@ class ElectronJsonParser:
                         {
                             "name": fields["name"],
                             "label": fields["label"],
+                            "hideable": fields["hideable"],
                             "helper_text": fields["helper_text"],
                         }
                         for fields in item["action_fields"]

@@ -54,6 +54,8 @@ class IftttElectronSupplementSpider(scrapy.Spider):
             callback=self.login_check,
         )
 
+
+    # 注意，由于账号缺乏绑定设备的数据，这里面的if条件判断里加了是否为wemo_switch的判断。后面限制放开后，需要增加获取数据为空时的判断
     def login_check(self, response):
         # check if successfully logged in
         if b"The email and password don&#39;t match." in response.body:
@@ -129,7 +131,7 @@ class IftttElectronSupplementSpider(scrapy.Spider):
         supplement = response.json()
         target_json = module_json
         for item in target_json:
-            if (item["module_name"] == sub_module_name):
+            if item["module_name"] == sub_module_name:
                 channels = item["live_channels"]
                 for target in channels:
                     if target["id"] == channel_id:
@@ -143,6 +145,7 @@ class IftttElectronSupplementSpider(scrapy.Spider):
         with open("./data/electron_json/trigger/" + trigger_module_name + ".json", "w") as f:
             json.dump(target_json, f, indent=4)
 
+    # 这里欠返回响应为空的判断
     def get_query_module_channel_supplement(self, response):
         module_json = response.meta["module_json"]
         query_module_name = response.meta["query_module_name"]

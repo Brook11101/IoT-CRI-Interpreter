@@ -45,9 +45,6 @@ function runPythonScript(args: PythonArgs) {
     ];
 
     const python = spawn(command, commandArgs);
-    python.on('error', (error) => {
-        console.error(`spawn error: ${error.message}`);
-    });
     python.stdout.on("data", (data) => {
         console.log(`stdout: ${data.toString()}`);
     });
