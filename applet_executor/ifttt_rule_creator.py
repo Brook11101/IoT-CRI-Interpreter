@@ -27,6 +27,11 @@ class IftttRuleCreater(scrapy.Spider):
         self.is_pro = kwargs["is_pro"]
         self.priority = kwargs["priority"]
 
+        # 在DSN前面加上转义符号
+        self.trigger_DSN = "\"" + self.trigger_DSN + "\""
+        self.query_DSN = "\"" + self.query_DSN + "\""
+        self.action_DSN = "\"" + self.action_DSN + "\""
+
         self.user_agent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.3"
         # load keys
         with open(self.keys_path, "r") as f:
@@ -76,14 +81,14 @@ class IftttRuleCreater(scrapy.Spider):
             "variables": {"name": "This is an automated created testing rule", "channel_id": self.trigger_channel,
                           "filter_code": "",
                           "trigger": {"step_identifier": self.trigger_device + "." + self.trigger_condition,
-                                      "fields": [{"name": "macaddress", "hidden": "false", "value": self.trigger_DSN}],
+                                      "fields": [{"name": "macaddress", "hidden": False, "value": self.trigger_DSN}],
                                       "channel_id": self.trigger_channel, "live_channel_id": self.trigger_DAC},
                           "actions": [{"step_identifier": self.action_device + "." + self.action_execution,
-                                       "fields": [{"name": "macaddress", "hidden": "false", "value": self.action_DSN}],
+                                       "fields": [{"name": "macaddress", "hidden": False, "value": self.action_DSN}],
                                        "channel_id": self.action_channel, "live_channel_id": self.action_DAC}],
                           "queries": [
                               {"step_identifier": self.query_device + "." + self.query_content,
-                               "fields": [{"name": "macaddress", "hidden": "false", "value": self.query_DSN}],
+                               "fields": [{"name": "macaddress", "hidden": False, "value": self.query_DSN}],
                                "channel_id": self.query_channel, "live_channel_id": self.query_DAC}],
                           "actions_delay": 0},
         }
@@ -97,4 +102,7 @@ class IftttRuleCreater(scrapy.Spider):
         )
 
     def check_rule_create(self, response):
-        print(response.text)
+        ret_data = response.json()
+        # print(ret_data)
+        if ret_data["data"]["diyAppletCreate"]["errors"] is None:
+            print("rule created successfully: " + ret_data["data"]["diyAppletCreate"]["normalized_applet"]["id"])
