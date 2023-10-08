@@ -97,6 +97,7 @@ function getAllSelects() {
         "action_DSN"
     ) as HTMLSelectElement;
 
+    let rule_name = document.getElementById("rule_name_input") as HTMLInputElement;
     let is_pro = document.getElementById("pro_chk") as HTMLInputElement;
     let priority = document.getElementById("priority") as HTMLSelectElement;
 
@@ -116,6 +117,7 @@ function getAllSelects() {
         action_DSN: action_DSN.options[action_DSN.selectedIndex].value,
         is_pro: is_pro.checked,
         priority: priority.options[priority.selectedIndex].text,
+        rule_name: rule_name.value,
     };
 }
 

@@ -10,7 +10,12 @@
 
 <body>
 <h1>IoT CRI Interpreter</h1>
-<br/>
+
+<div class="input-container" id="rule_name">
+    <label id="rule_name_label" for="rule_name_input">Rule Name:</label>
+    <input type="text" id="rule_name_input" placeholder="输入 Rule Name...">
+</div>
+
 <div class="select-grid">
     <div class="input-group">
         <p>Trigger device</p>
@@ -123,10 +128,10 @@
         </p>
     </div>
 </div>
-<br/>
 
 <div id="editor"></div>
 <br/>
+
 <div style="text-align: center">
     <button id="refresh_button">Refresh</button>
     <button id="start_button">Start!</button>

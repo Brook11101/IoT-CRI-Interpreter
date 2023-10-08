@@ -6,6 +6,7 @@ import {spawn} from "child_process";
 //页面变化时发送消息事件
 
 interface PythonArgs {
+    rule_name: string;
     trigger_device: string;
     trigger_condition: string;
     trigger_DAC: string;
@@ -27,20 +28,21 @@ function runPythonScript(args: PythonArgs) {
     const command = "scrapy";
     const commandArgs = [
         "runspider",
-        "-a","trigger_device="+args.trigger_device,
-        "-a","trigger_condition="+args.trigger_condition,
-        "-a","trigger_DAC="+args.trigger_DAC,
-        "-a","trigger_DSN="+args.trigger_DSN,
-        "-a","query_device="+args.query_device,
-        "-a","query_content="+args.query_content,
-        "-a","query_DAC="+args.query_DAC,
-        "-a","query_DSN="+args.query_DSN,
-        "-a","action_device="+args.action_device,
-        "-a","action_execution="+args.action_execution,
-        "-a","action_DAC="+args.action_DAC,
-        "-a","action_DSN="+args.action_DSN,
-        "-a","is_pro="+String(args["is_pro"]),
-        "-a","priority="+args.priority,
+        "-a", "trigger_device=" + args.trigger_device,
+        "-a", "trigger_condition=" + args.trigger_condition,
+        "-a", "trigger_DAC=" + args.trigger_DAC,
+        "-a", "trigger_DSN=" + args.trigger_DSN,
+        "-a", "query_device=" + args.query_device,
+        "-a", "query_content=" + args.query_content,
+        "-a", "query_DAC=" + args.query_DAC,
+        "-a", "query_DSN=" + args.query_DSN,
+        "-a", "action_device=" + args.action_device,
+        "-a", "action_execution=" + args.action_execution,
+        "-a", "action_DAC=" + args.action_DAC,
+        "-a", "action_DSN=" + args.action_DSN,
+        "-a", "is_pro=" + String(args["is_pro"]),
+        "-a", "priority=" + args.priority,
+        "-a", "rule_name=" + args.rule_name,
         "../applet_executor/ifttt_rule_creator.py",
     ];
 

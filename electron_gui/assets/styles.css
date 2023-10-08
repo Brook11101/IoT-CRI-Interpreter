@@ -5,7 +5,6 @@ body {
     padding: 0;
 }
 
-
 h1 {
     text-align: center;
     color: #333;
@@ -26,7 +25,6 @@ h1 {
     border-radius: 5px;
     background-color: #f5f5f5;
 }
-
 
 select {
     width: 100%;
@@ -62,19 +60,17 @@ p {
     padding: 5px 0;
 }
 
-
 button {
     display: block;
     width: 100%; /* 自动适应内容宽度 */
     padding: 8px 16px; /* 调整按钮内边距，使其更加紧凑 */
-    margin: 0 auto; /* 水平居中 */
+    margin: 10px auto; /* 水平居中，并增加上下边距 */
     border: 1px solid #ccc;
     border-radius: 4px;
     background-color: #007bff;
     color: #fff;
     cursor: pointer;
 }
-
 
 button:hover {
     background-color: #0056b3;
@@ -88,8 +84,7 @@ button#refresh_button:hover {
     background-color: #555e66;
 }
 
-
-#editor{
+#editor {
     display: flex;
     flex-wrap: wrap;
     justify-content: space-between;
@@ -99,4 +94,33 @@ button#refresh_button:hover {
     border: 1px solid #ccc;
     border-radius: 5px;
     background-color: #f5f5f5;
+}
+
+#rule_name {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+    margin: 10px;
+    padding: 5px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background-color: #f5f5f5;
+    height: auto;
+}
+
+#rule_name_label {
+    font-weight: bold;
+    margin: 0;
+    padding: 5px 10px;
+}
+
+#rule_name_input {
+    flex: 1;
+    padding: 5px;
+    margin: 0;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    background-color: #fff;
+    height: 100%;
 }

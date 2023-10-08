@@ -29,6 +29,7 @@ class IftttRuleCreater(scrapy.Spider):
         self.action_DSN = kwargs["action_DSN"]
         self.is_pro = kwargs["is_pro"]
         self.priority = kwargs["priority"]
+        self.rule_name = kwargs["rule_name"]
 
         # 在DSN前面加上转义符号
         self.trigger_DSN = "\"" + self.trigger_DSN + "\""
@@ -102,7 +103,7 @@ class IftttRuleCreater(scrapy.Spider):
 
         payload = {
             "query": "\n  mutation DIYCreateAppletMutation(\n    $name: String!\n    $description: String\n    $channel_id: ID!\n    $push_enabled: Boolean\n    $filter_code: String\n    $trigger: DiyTandaInput!\n    $queries: [DiyTandaInput]\n    $actions: [DiyTandaInput]!\n    $actions_delay: Int\n  ) {\n    diyAppletCreate(\n      input: {\n        name: $name\n        description: $description\n        channel_id: $channel_id\n        filter_code: $filter_code\n        push_enabled: $push_enabled\n        trigger: $trigger\n        queries: $queries\n        actions: $actions\n        actions_delay: $actions_delay\n      }\n    ) {\n      errors {\n        attribute\n        message\n      }\n      normalized_applet {\n        id\n      }\n    }\n  }\n",
-            "variables": {"name": "This is an automated created testing rule", "channel_id": self.trigger_channel,
+            "variables": {"name": self.rule_name, "channel_id": self.trigger_channel,
                           "filter_code": "",
                           "trigger": {"step_identifier": self.trigger_device + "." + self.trigger_condition,
                                       "fields": [{"name": self.trigger_fields_name, "hidden": False, "value": self.trigger_DSN}],
