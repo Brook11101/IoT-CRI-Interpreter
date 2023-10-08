@@ -8,6 +8,9 @@ class IftttRuleCreater(scrapy.Spider):
     start_urls = ["https://ifttt.com/login"]
     keys_path = "../.././keys/keys.json"  # 因为对于main.ts来说是在electron文件夹层级调用的
     module_id_path = "../../data/public_module.json"
+    module_trigger_field_path = "../../data/trigger_json/"
+    module_query_field_path = "../../data/query_json/"
+    module_action_field_path = "../../data/action_json/"
 
     def __init__(self, *args, **kwargs) -> None:
         super(IftttRuleCreater, self).__init__(*args, **kwargs)
@@ -51,6 +54,27 @@ class IftttRuleCreater(scrapy.Spider):
             if (item["module_name"]) == self.action_device:
                 self.action_channel = item["id"]
 
+        with open(self.module_trigger_field_path+self.trigger_device+".json", "r") as f:
+            trigger_module = json.load(f)
+            for item in trigger_module["data"]["channel"]["public_triggers"]:
+                if self.trigger_condition == item["module_name"]:
+                    if item["trigger_fields"]:
+                        self.trigger_fields_name = item["trigger_fields"][0]["name"]
+
+        with open(self.module_query_field_path+self.query_device+".json", "r") as f:
+            query_module = json.load(f)
+            for item in query_module["data"]["channel"]["public_queries"]:
+                if self.query_content == item["module_name"]:
+                    if item["query_fields"]:
+                        self.query_fields_name = item["query_fields"][0]["name"]
+
+        with open(self.module_action_field_path+self.action_device+".json", "r") as f:
+            action_module = json.load(f)
+            for item in action_module["data"]["channel"]["public_actions"]:
+                if self.action_execution == item["module_name"]:
+                    if item["action_fields"]:
+                        self.action_fields_name = item["action_fields"][0]["name"]
+
     def parse(self, response):
         yield scrapy.FormRequest.from_response(
             response,
@@ -81,14 +105,14 @@ class IftttRuleCreater(scrapy.Spider):
             "variables": {"name": "This is an automated created testing rule", "channel_id": self.trigger_channel,
                           "filter_code": "",
                           "trigger": {"step_identifier": self.trigger_device + "." + self.trigger_condition,
-                                      "fields": [{"name": "macaddress", "hidden": False, "value": self.trigger_DSN}],
+                                      "fields": [{"name": self.trigger_fields_name, "hidden": False, "value": self.trigger_DSN}],
                                       "channel_id": self.trigger_channel, "live_channel_id": self.trigger_DAC},
                           "actions": [{"step_identifier": self.action_device + "." + self.action_execution,
-                                       "fields": [{"name": "macaddress", "hidden": False, "value": self.action_DSN}],
+                                       "fields": [{"name": self.action_fields_name, "hidden": False, "value": self.action_DSN}],
                                        "channel_id": self.action_channel, "live_channel_id": self.action_DAC}],
                           "queries": [
                               {"step_identifier": self.query_device + "." + self.query_content,
-                               "fields": [{"name": "macaddress", "hidden": False, "value": self.query_DSN}],
+                               "fields": [{"name": self.query_fields_name, "hidden": False, "value": self.query_DSN}],
                                "channel_id": self.query_channel, "live_channel_id": self.query_DAC}],
                           "actions_delay": 0},
         }
