@@ -35,6 +35,8 @@ function refreshDACSelect(elem: HTMLSelectElement, selectDict: object) {
     }
 }
 
+
+// 需要在这里加上数目动态变化的输入框（因为action fields里面数量是变化的）
 function refreshDSNSelect(elem: HTMLSelectElement, json_dict: object, select_account: string) {
     elem.innerHTML = "";
     let optionsAdded = false; // 用于跟踪是否已经添加了选项

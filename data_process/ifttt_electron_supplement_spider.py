@@ -76,7 +76,8 @@ class IftttElectronSupplementSpider(scrapy.Spider):
                         if sub_module_live_channels:
                             for channel in sub_module_live_channels:
                                 channel_id = channel["id"]
-                                # 由于ui设计的问题，这里对trigger_fields参数查询只取了默认第一个，后面会查询到所有对应trigger_fields的信息
+                                # 由于ui设计的问题，这里对trigger_fields参数查询只取了默认第一个
+                                # 需要将fields中所有的内容清洗到对应的electron json内
                                 trigger_fields_name = sub_module_trigger_fields["name"]
                                 queryString = "https://ifttt.com/stored_fields/options?resolve_url=/stored_fields/triggers/" + trigger_module_name + "." + sub_module_name + "/" + trigger_fields_name + "/options&live_channel_id=" + channel_id
                                 yield scrapy.Request(
@@ -152,6 +153,7 @@ class IftttElectronSupplementSpider(scrapy.Spider):
                 channels = item["live_channels"]
                 for target in channels:
                     if target["id"] == channel_id:
+                        # 在随后的修改中，可以外层for循环，我们每次往里面append新的内容，即trigger_fields_name：supplement[trigger_fields_name]
                         handle = {
                             "id": target["id"],
                             "user_name_field": target["user_name_field"],

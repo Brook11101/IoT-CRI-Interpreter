@@ -65,11 +65,13 @@ class ElectronJsonParser:
                     "description": item["description"],
                     "id": item["id"],
                     "weight": item["weight"],
+                    "trigger_fields_num":len(item["trigger_fields"]),
                     "trigger_fields": [
                         {
                             "name": fields["name"],
                             "label": fields["label"],
                             "hideable": fields["hideable"],
+                            "normalized_field_type": fields["normalized_field_type"],
                             "helper_text": fields["helper_text"],
                         }
                         for fields in item["trigger_fields"]
@@ -104,11 +106,13 @@ class ElectronJsonParser:
                     "description": item["description"],
                     "id": item["id"],
                     "weight": item["weight"],
+                    "query_fields_num": len(item["query_fields"]),
                     "query_fields": [
                         {
                             "name": fields["name"],
                             "label": fields["label"],
                             "hideable": fields["hideable"],
+                            "normalized_field_type": fields["normalized_field_type"],
                             "helper_text": fields["helper_text"],
                         }
                         for fields in item["query_fields"]
@@ -141,11 +145,13 @@ class ElectronJsonParser:
                     "description": item["description"],
                     "id": item["id"],
                     "weight": item["weight"],
+                    "action_fields_num": len(item["action_fields"]),
                     "action_fields": [
                         {
                             "name": fields["name"],
                             "label": fields["label"],
                             "hideable": fields["hideable"],
+                            "normalized_field_type": fields["normalized_field_type"],
                             "helper_text": fields["helper_text"],
                         }
                         for fields in item["action_fields"]
