@@ -70,25 +70,25 @@ class IftttElectronSupplementSpider(scrapy.Spider):
                 for item in module_json:
                     sub_module_name = item["module_name"]
                     sub_module_live_channels = item["live_channels"]
-                    if item["trigger_fields"]:
-                        sub_module_trigger_fields = item["trigger_fields"][0]
-                        # 首先判断是否存在账号数据，即是否有绑定的设备
-                        if sub_module_live_channels:
-                            for channel in sub_module_live_channels:
-                                channel_id = channel["id"]
-                                # 由于ui设计的问题，这里对trigger_fields参数查询只取了默认第一个
-                                # 需要将fields中所有的内容清洗到对应的electron json内
-                                trigger_fields_name = sub_module_trigger_fields["name"]
-                                queryString = "https://ifttt.com/stored_fields/options?resolve_url=/stored_fields/triggers/" + trigger_module_name + "." + sub_module_name + "/" + trigger_fields_name + "/options&live_channel_id=" + channel_id
-                                yield scrapy.Request(
-                                    url=queryString,
-                                    headers=headers,
-                                    method="GET",
-                                    callback=self.get_trigger_module_channel_supplement,
-                                    meta={"module_json": module_json, "trigger_module_name": trigger_module_name,
-                                          "sub_module_name": sub_module_name, "channel_id": channel_id,
-                                          "trigger_fields_name": trigger_fields_name}
-                                )
+                    # 这里实现了对fields所有参数的遍历
+                    if "trigger_fields" in item:
+                        trigger_fields_list = item["trigger_fields"]
+                        for sub_module_trigger_fields in trigger_fields_list:
+                            # 首先判断是否存在账号数据，即是否有绑定的设备
+                            if sub_module_live_channels:
+                                for channel in sub_module_live_channels:
+                                    channel_id = channel["id"]
+                                    trigger_fields_name = sub_module_trigger_fields["name"]
+                                    queryString = "https://ifttt.com/stored_fields/options?resolve_url=/stored_fields/triggers/" + trigger_module_name + "." + sub_module_name + "/" + trigger_fields_name + "/options&live_channel_id=" + channel_id
+                                    yield scrapy.Request(
+                                        url=queryString,
+                                        headers=headers,
+                                        method="GET",
+                                        callback=self.get_trigger_module_channel_supplement,
+                                        meta={"module_json": module_json, "trigger_module_name": trigger_module_name,
+                                              "sub_module_name": sub_module_name, "channel_id": channel_id,
+                                              "trigger_fields_name": trigger_fields_name}
+                                    )
 
         for query_module_name in self.query_module_name_list:
             with open("./data/electron_json/query/" + query_module_name + ".json", "r") as f:
@@ -96,23 +96,24 @@ class IftttElectronSupplementSpider(scrapy.Spider):
                 for item in module_json:
                     sub_module_name = item["module_name"]
                     sub_module_live_channels = item["live_channels"]
-                    if item["query_fields"]:
-                        sub_module_query_fields = item["query_fields"][0]
-                        # 首先判断是否存在账号数据，即是否有绑定的设备
-                        if sub_module_live_channels:
-                            for channel in sub_module_live_channels:
-                                channel_id = channel["id"]
-                                query_fields_name = sub_module_query_fields["name"]
-                                queryString = "https://ifttt.com/stored_fields/options?resolve_url=/stored_fields/queries/" + query_module_name + "." + sub_module_name + "/" + query_fields_name + "/options&live_channel_id=" + channel_id
-                                yield scrapy.Request(
-                                    url=queryString,
-                                    headers=headers,
-                                    method="GET",
-                                    callback=self.get_query_module_channel_supplement,
-                                    meta={"module_json": module_json, "query_module_name": query_module_name,
-                                          "sub_module_name": sub_module_name, "channel_id": channel_id,
-                                          "query_fields_name": query_fields_name}
-                                )
+                    if "query_fields" in item:
+                        query_fields_list = item["query_fields"]
+                        for sub_module_query_fields in query_fields_list:
+                            # 首先判断是否存在账号数据，即是否有绑定的设备
+                            if sub_module_live_channels:
+                                for channel in sub_module_live_channels:
+                                    channel_id = channel["id"]
+                                    query_fields_name = sub_module_query_fields["name"]
+                                    queryString = "https://ifttt.com/stored_fields/options?resolve_url=/stored_fields/queries/" + query_module_name + "." + sub_module_name + "/" + query_fields_name + "/options&live_channel_id=" + channel_id
+                                    yield scrapy.Request(
+                                        url=queryString,
+                                        headers=headers,
+                                        method="GET",
+                                        callback=self.get_query_module_channel_supplement,
+                                        meta={"module_json": module_json, "query_module_name": query_module_name,
+                                              "sub_module_name": sub_module_name, "channel_id": channel_id,
+                                              "query_fields_name": query_fields_name}
+                                    )
 
         for action_module_name in self.action_module_name_list:
             with open("./data/electron_json/action/" + action_module_name + ".json", "r") as f:
@@ -120,23 +121,25 @@ class IftttElectronSupplementSpider(scrapy.Spider):
                 for item in module_json:
                     sub_module_name = item["module_name"]
                     sub_module_live_channels = item["live_channels"]
-                    if item["action_fields"]:
-                        sub_module_action_fields = item["action_fields"][0]
-                        # 首先判断是否存在账号数据，即是否有绑定的设备
-                        if sub_module_live_channels:
-                            for channel in sub_module_live_channels:
-                                channel_id = channel["id"]
-                                action_fields_name = sub_module_action_fields["name"]
-                                queryString = "https://ifttt.com/stored_fields/options?resolve_url=/stored_fields/actions/" + action_module_name + "." + sub_module_name + "/" + action_fields_name + "/options&live_channel_id=" + channel_id
-                                yield scrapy.Request(
-                                    url=queryString,
-                                    headers=headers,
-                                    method="GET",
-                                    callback=self.get_action_module_channel_supplement,
-                                    meta={"module_json": module_json, "action_module_name": action_module_name,
-                                          "sub_module_name": sub_module_name, "channel_id": channel_id,
-                                          "action_fields_name": action_fields_name}
-                                )
+                    # 这里实现了对fields所有参数的遍历
+                    if "action_fields" in item:
+                        action_fields_list = item["action_fields"]
+                        for sub_module_action_fields in action_fields_list:
+                            # 首先判断是否存在账号数据，即是否有绑定的设备
+                            if sub_module_live_channels:
+                                for channel in sub_module_live_channels:
+                                    channel_id = channel["id"]
+                                    action_fields_name = sub_module_action_fields["name"]
+                                    queryString = "https://ifttt.com/stored_fields/options?resolve_url=/stored_fields/actions/" + action_module_name + "." + sub_module_name + "/" + action_fields_name + "/options&live_channel_id=" + channel_id
+                                    yield scrapy.Request(
+                                        url=queryString,
+                                        headers=headers,
+                                        method="GET",
+                                        callback=self.get_action_module_channel_supplement,
+                                        meta={"module_json": module_json, "action_module_name": action_module_name,
+                                              "sub_module_name": sub_module_name, "channel_id": channel_id,
+                                              "action_fields_name": action_fields_name}
+                                    )
 
 
     # 如果数据为空的话，macaddress里面返回的直接是空数据
@@ -147,23 +150,44 @@ class IftttElectronSupplementSpider(scrapy.Spider):
         channel_id = response.meta["channel_id"]
         trigger_fields_name = response.meta["trigger_fields_name"]
         supplement = response.json()
-        target_json = module_json
-        for item in target_json:
-            if item["module_name"] == sub_module_name:
+
+        # 在循环外创建一个空的 target_json 列表
+        target_json = []
+        for item in module_json:
+            if (item["module_name"] == sub_module_name):
                 channels = item["live_channels"]
                 for target in channels:
                     if target["id"] == channel_id:
-                        # 在随后的修改中，可以外层for循环，我们每次往里面append新的内容，即trigger_fields_name：supplement[trigger_fields_name]
                         handle = {
                             "id": target["id"],
                             "user_name_field": target["user_name_field"],
                             "offline": target["offline"],
-                            # 为了与前端读取数据时相呼应，此处暂时将所有的设备数据的键名为“macaddress”
-                            "macaddress": supplement[trigger_fields_name],
+                            trigger_fields_name: supplement[trigger_fields_name],
                         }
                         target.update(handle)
+            # 在每次循环结束后将 item 添加到 target_json 列表中
+            target_json.append(item)
+        # 将整个 target_json 列表写入文件
         with open("./data/electron_json/trigger/" + trigger_module_name + ".json", "w") as f:
             json.dump(target_json, f, indent=4)
+
+        # target_json = module_json
+        # for item in target_json:
+        #     if item["module_name"] == sub_module_name:
+        #         channels = item["live_channels"]
+        #         for target in channels:
+        #             if target["id"] == channel_id:
+        #                 # 在随后的修改中，可以外层for循环，我们每次往里面append新的内容，即trigger_fields_name：supplement[trigger_fields_name]
+        #                 handle = {
+        #                     "id": target["id"],
+        #                     "user_name_field": target["user_name_field"],
+        #                     "offline": target["offline"],
+        #                     # 为了与前端读取数据时相呼应，此处暂时将所有的设备数据的键名为“macaddress”
+        #                     "macaddress": supplement[trigger_fields_name],
+        #                 }
+        #                 target.update(handle)
+        # with open("./data/electron_json/trigger/" + trigger_module_name + ".json", "w") as f:
+        #     json.dump(target_json, f, indent=4)
 
     def get_query_module_channel_supplement(self, response):
         module_json = response.meta["module_json"]
@@ -172,29 +196,10 @@ class IftttElectronSupplementSpider(scrapy.Spider):
         channel_id = response.meta["channel_id"]
         query_fields_name = response.meta["query_fields_name"]
         supplement = response.json()
-        target_json = module_json
-        for item in target_json:
-            if (item["module_name"] == sub_module_name):
-                channels = item["live_channels"]
-                for target in channels:
-                    if target["id"] == channel_id:
-                        handle = {"id": target["id"],
-                                  "user_name_field": target["user_name_field"],
-                                  "offline": target["offline"],
-                                  "macaddress": supplement[query_fields_name], }
-                        target.update(handle)
-        with open("./data/electron_json/query/" + query_module_name + ".json", "w") as f:
-            json.dump(target_json, f, indent=4)
 
-    def get_action_module_channel_supplement(self, response):
-        module_json = response.meta["module_json"]
-        action_module_name = response.meta["action_module_name"]
-        sub_module_name = response.meta["sub_module_name"]
-        channel_id = response.meta["channel_id"]
-        action_fields_name = response.meta["action_fields_name"]
-        supplement = response.json()
-        target_json = module_json
-        for item in target_json:
+        # 在循环外创建一个空的 target_json 列表
+        target_json = []
+        for item in module_json:
             if (item["module_name"] == sub_module_name):
                 channels = item["live_channels"]
                 for target in channels:
@@ -203,8 +208,69 @@ class IftttElectronSupplementSpider(scrapy.Spider):
                             "id": target["id"],
                             "user_name_field": target["user_name_field"],
                             "offline": target["offline"],
-                            "macaddress": supplement[action_fields_name],
+                            query_fields_name: supplement[query_fields_name],
                         }
                         target.update(handle)
+            # 在每次循环结束后将 item 添加到 target_json 列表中
+            target_json.append(item)
+        # 将整个 target_json 列表写入文件
+        with open("./data/electron_json/query/" + query_module_name + ".json", "w") as f:
+            json.dump(target_json, f, indent=4)
+
+        # target_json = module_json
+        # for item in target_json:
+        #     if (item["module_name"] == sub_module_name):
+        #         channels = item["live_channels"]
+        #         for target in channels:
+        #             if target["id"] == channel_id:
+        #                 handle = {"id": target["id"],
+        #                           "user_name_field": target["user_name_field"],
+        #                           "offline": target["offline"],
+        #                           "macaddress": supplement[query_fields_name], }
+        #                 target.update(handle)
+        # with open("./data/electron_json/query/" + query_module_name + ".json", "w") as f:
+        #     json.dump(target_json, f, indent=4)
+
+    def get_action_module_channel_supplement(self, response):
+        module_json = response.meta["module_json"]
+        action_module_name = response.meta["action_module_name"]
+        sub_module_name = response.meta["sub_module_name"]
+        channel_id = response.meta["channel_id"]
+        action_fields_name = response.meta["action_fields_name"]
+        supplement = response.json()
+
+        # 在循环外创建一个空的 target_json 列表
+        target_json = []
+        for item in module_json:
+            if (item["module_name"] == sub_module_name):
+                channels = item["live_channels"]
+                for target in channels:
+                    if target["id"] == channel_id:
+                        handle = {
+                            "id": target["id"],
+                            "user_name_field": target["user_name_field"],
+                            "offline": target["offline"],
+                            action_fields_name: supplement[action_fields_name],
+                        }
+                        target.update(handle)
+            # 在每次循环结束后将 item 添加到 target_json 列表中
+            target_json.append(item)
+        # 将整个 target_json 列表写入文件
         with open("./data/electron_json/action/" + action_module_name + ".json", "w") as f:
             json.dump(target_json, f, indent=4)
+
+        # target_json = module_json
+        # for item in target_json:
+        #     if (item["module_name"] == sub_module_name):
+        #         channels = item["live_channels"]
+        #         for target in channels:
+        #             if target["id"] == channel_id:
+        #                 handle = {
+        #                     "id": target["id"],
+        #                     "user_name_field": target["user_name_field"],
+        #                     "offline": target["offline"],
+        #                     action_fields_name: supplement[action_fields_name],
+        #                 }
+        #                 target.update(handle)
+        # with open("./data/electron_json/action/" + action_module_name + ".json", "w") as f:
+        #     json.dump(target_json, f, indent=4)
