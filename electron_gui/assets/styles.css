@@ -60,6 +60,12 @@ p {
     padding: 5px 0;
 }
 
+.label-style {
+    font-weight: bold;
+    margin: 0;
+    padding: 5px 0;
+}
+
 button {
     display: block;
     width: 100%; /* 自动适应内容宽度 */
