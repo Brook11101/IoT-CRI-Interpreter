@@ -89,9 +89,15 @@ function getAllSelects() {
     let trigger_DAC = document.getElementById(
         "trigger_DAC"
     ) as HTMLSelectElement;
-    let trigger_DSN = document.getElementById(
-        "trigger_DSN"
-    ) as HTMLSelectElement;
+    const dynamic_trigger_device_info: { label: string, selectedValue: string }[] = [];
+    const dynamic_trigger = document.querySelectorAll(".dynamic-trigger-select-style") as NodeListOf<HTMLSelectElement>;
+    dynamic_trigger.forEach((select) => {
+        const label = select.previousElementSibling.textContent; // 获取标签文本
+        const selectedValue = select.value; // 获取当前选择的值
+        dynamic_trigger_device_info.push({label, selectedValue});
+    });
+
+
     let query_device = document.getElementById(
         "query_device"
     ) as HTMLSelectElement;
@@ -101,9 +107,14 @@ function getAllSelects() {
     let query_DAC = document.getElementById(
         "query_DAC"
     ) as HTMLSelectElement;
-    let query_DSN = document.getElementById(
-        "query_DSN"
-    ) as HTMLSelectElement;
+    const dynamic_query_device_info: { label: string, selectedValue: string }[] = [];
+    const dynamic_query = document.querySelectorAll(".dynamic-query-select-style") as NodeListOf<HTMLSelectElement>;
+    dynamic_query.forEach((select) => {
+        const label = select.previousElementSibling.textContent; // 获取标签文本
+        const selectedValue = select.value; // 获取当前选择的值
+        dynamic_query_device_info.push({label, selectedValue});
+    });
+
     let action_device = document.getElementById(
         "action_device"
     ) as HTMLSelectElement;
@@ -113,9 +124,14 @@ function getAllSelects() {
     let action_DAC = document.getElementById(
         "action_DAC"
     ) as HTMLSelectElement;
-    let action_DSN = document.getElementById(
-        "action_DSN"
-    ) as HTMLSelectElement;
+    const dynamic_action_device_info: { label: string, selectedValue: string }[] = [];
+    const dynamic_action = document.querySelectorAll(".dynamic-action-select-style") as NodeListOf<HTMLSelectElement>;
+    dynamic_action.forEach((select) => {
+        const label = select.previousElementSibling.textContent; // 获取标签文本
+        const selectedValue = select.value; // 获取当前选择的值
+        dynamic_action_device_info.push({label, selectedValue});
+    });
+
 
     let rule_name = document.getElementById("rule_name_input") as HTMLInputElement;
     let is_pro = document.getElementById("pro_chk") as HTMLInputElement;
@@ -125,15 +141,18 @@ function getAllSelects() {
         trigger_device: trigger_device.options[trigger_device.selectedIndex].value,
         trigger_condition: trigger_condition.options[trigger_condition.selectedIndex].value,
         trigger_DAC: trigger_DAC.options[trigger_DAC.selectedIndex].value,
-        trigger_DSN: trigger_DSN.options[trigger_DSN.selectedIndex].value,
+        trigger_device_info: dynamic_trigger_device_info,
+
         query_device: query_device.options[query_device.selectedIndex].value,
         query_content: query_content.options[query_content.selectedIndex].value,
         query_DAC: query_DAC.options[query_DAC.selectedIndex].value,
-        query_DSN: query_DSN.options[query_DSN.selectedIndex].value,
+        query_device_info: dynamic_query_device_info,
+
         action_device: action_device.options[action_device.selectedIndex].value,
         action_execution: action_execution.options[action_execution.selectedIndex].value,
         action_DAC: action_DAC.options[action_DAC.selectedIndex].value,
-        action_DSN: action_DSN.options[action_DSN.selectedIndex].value,
+        action_device_info: dynamic_action_device_info,
+
         is_pro: is_pro.checked,
         priority: priority.options[priority.selectedIndex].text,
         rule_name: rule_name.value,
@@ -428,6 +447,7 @@ window.onload = () => {
                             labelElement.classList.add("label-style");
                             let selectElement = document.createElement("select");
                             selectElement.id = key;
+                            selectElement.classList.add("dynamic-trigger-select-style");
 
                             let defaultOption = document.createElement("option");
                             defaultOption.value = "";
@@ -450,6 +470,8 @@ window.onload = () => {
                         let selectElement = document.createElement("select");
                         // @ts-ignore
                         selectElement.id = trigger_fields_item["name"];
+                        selectElement.classList.add("dynamic-trigger-select-style");
+
                         let defaultOption = document.createElement("option");
                         defaultOption.value = "";
                         defaultOption.text = "No bounded info";
@@ -482,6 +504,7 @@ window.onload = () => {
                             labelElement.classList.add("label-style");
                             let selectElement = document.createElement("select");
                             selectElement.id = key;
+                            selectElement.classList.add("dynamic-query-select-style");
 
                             let defaultOption = document.createElement("option");
                             defaultOption.value = "";
@@ -504,6 +527,8 @@ window.onload = () => {
                         let selectElement = document.createElement("select");
                         // @ts-ignore
                         selectElement.id = query_fields_item["name"];
+                        selectElement.classList.add("dynamic-query-select-style");
+
                         let defaultOption = document.createElement("option");
                         defaultOption.value = "";
                         defaultOption.text = "No bounded info";
@@ -536,6 +561,7 @@ window.onload = () => {
                             labelElement.classList.add("label-style");
                             let selectElement = document.createElement("select");
                             selectElement.id = key;
+                            selectElement.classList.add("dynamic-action-select-style");
 
                             let defaultOption = document.createElement("option");
                             defaultOption.value = "";
@@ -558,6 +584,8 @@ window.onload = () => {
                         let selectElement = document.createElement("select");
                         // @ts-ignore
                         selectElement.id = action_fields_item["name"];
+                        selectElement.classList.add("dynamic-action-select-style");
+
                         let defaultOption = document.createElement("option");
                         defaultOption.value = "";
                         defaultOption.text = "No bounded info";

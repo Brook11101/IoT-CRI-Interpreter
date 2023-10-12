@@ -66,6 +66,30 @@ p {
     padding: 5px 0;
 }
 
+.dynamic-trigger-select-style {
+    width: 100%;
+    padding: 5px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+.dynamic-query-select-style {
+    width: 100%;
+    padding: 5px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+.dynamic-action-select-style {
+    width: 100%;
+    padding: 5px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
 button {
     display: block;
     width: 100%; /* 自动适应内容宽度 */

@@ -10,15 +10,18 @@ interface PythonArgs {
     trigger_device: string;
     trigger_condition: string;
     trigger_DAC: string;
-    trigger_DSN: string;
+    trigger_device_info: object[];
+
     query_device: string;
     query_content: string;
     query_DAC: string;
-    query_DSN: string;
+    query_device_info: object[];
+
     action_device: string;
     action_execution: string;
     action_DAC: string;
-    action_DSN: string;
+    action_device_info: object[];
+
     is_pro: boolean;
     priority: string;
 }
@@ -31,15 +34,18 @@ function runPythonScript(args: PythonArgs) {
         "-a", "trigger_device=" + args.trigger_device,
         "-a", "trigger_condition=" + args.trigger_condition,
         "-a", "trigger_DAC=" + args.trigger_DAC,
-        "-a", "trigger_DSN=" + args.trigger_DSN,
+        "-a", "trigger_device_info=" + JSON.stringify(args.trigger_device_info),
+
         "-a", "query_device=" + args.query_device,
         "-a", "query_content=" + args.query_content,
         "-a", "query_DAC=" + args.query_DAC,
-        "-a", "query_DSN=" + args.query_DSN,
+        "-a", "query_device_info=" + JSON.stringify(args.query_device_info),
+
         "-a", "action_device=" + args.action_device,
         "-a", "action_execution=" + args.action_execution,
         "-a", "action_DAC=" + args.action_DAC,
-        "-a", "action_DSN=" + args.action_DSN,
+        "-a", "action_device_info=" + JSON.stringify(args.action_device_info),
+
         "-a", "is_pro=" + String(args["is_pro"]),
         "-a", "priority=" + args.priority,
         "-a", "rule_name=" + args.rule_name,
