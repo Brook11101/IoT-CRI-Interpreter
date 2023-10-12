@@ -95,7 +95,7 @@ app.whenReady().then(() => {
 //这个args是输入栏里的每一项参数
 ipcMain.on("start_button_click", (event, arg) => {
     console.log("start!");
-    console.log(arg);
+    // console.log(arg);
     runPythonScript(arg);
 });
 //trigger_devices是所有名字的集合体

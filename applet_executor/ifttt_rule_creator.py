@@ -34,16 +34,38 @@ class IftttRuleCreater(scrapy.Spider):
         self.priority = kwargs["priority"]
         self.rule_name = kwargs["rule_name"]
 
-        # 在DSN前面加上转义符号
+        # 对于每一个value，需要在首位{}的前后加上”，对于{}内部的每一个”前加上转移符号、
         self.trigger_info_data = json.loads(self.trigger_device_info)
         for item in self.trigger_info_data:
-            item["selectedValue"] = "\"" + item["selectedValue"] + "\""
+            modified_value = ""
+            for char in item["selectedValue"]:
+                if char == "\"":
+                    modified_value += "\\"
+                    modified_value += char
+                else:
+                    modified_value += char
+            item["selectedValue"] = "\"" + modified_value + "\""
         self.query_info_data = json.loads(self.query_device_info)
         for item in self.query_info_data:
-            item["selectedValue"] = "\"" + item["selectedValue"] + "\""
+            modified_value = ""
+            for char in item["selectedValue"]:
+                if char == "\"":
+                    modified_value += "\\"
+                    modified_value += char
+                else:
+                    modified_value += char
+            item["selectedValue"] = "\"" + modified_value + "\""
         self.action_info_data = json.loads(self.action_device_info)
         for item in self.action_info_data:
-            item["selectedValue"] = "\"" + item["selectedValue"] + "\""
+            modified_value = ""
+            for char in item["selectedValue"]:
+                if char == "\"":
+                    modified_value += "\\"
+                    modified_value += char
+                else:
+                    modified_value += char
+            item["selectedValue"] = "\"" + modified_value + "\""
+
 
         self.user_agent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.3"
         # load keys
