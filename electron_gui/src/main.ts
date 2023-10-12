@@ -10,15 +10,18 @@ interface PythonArgs {
     trigger_device: string;
     trigger_condition: string;
     trigger_DAC: string;
-    trigger_DSN: string;
+    trigger_device_info: object[];
+
     query_device: string;
     query_content: string;
     query_DAC: string;
-    query_DSN: string;
+    query_device_info: object[];
+
     action_device: string;
     action_execution: string;
     action_DAC: string;
-    action_DSN: string;
+    action_device_info: object[];
+
     is_pro: boolean;
     priority: string;
 }
@@ -31,15 +34,18 @@ function runPythonScript(args: PythonArgs) {
         "-a", "trigger_device=" + args.trigger_device,
         "-a", "trigger_condition=" + args.trigger_condition,
         "-a", "trigger_DAC=" + args.trigger_DAC,
-        "-a", "trigger_DSN=" + args.trigger_DSN,
+        "-a", "trigger_device_info=" + JSON.stringify(args.trigger_device_info),
+
         "-a", "query_device=" + args.query_device,
         "-a", "query_content=" + args.query_content,
         "-a", "query_DAC=" + args.query_DAC,
-        "-a", "query_DSN=" + args.query_DSN,
+        "-a", "query_device_info=" + JSON.stringify(args.query_device_info),
+
         "-a", "action_device=" + args.action_device,
         "-a", "action_execution=" + args.action_execution,
         "-a", "action_DAC=" + args.action_DAC,
-        "-a", "action_DSN=" + args.action_DSN,
+        "-a", "action_device_info=" + JSON.stringify(args.action_device_info),
+
         "-a", "is_pro=" + String(args["is_pro"]),
         "-a", "priority=" + args.priority,
         "-a", "rule_name=" + args.rule_name,
@@ -89,7 +95,7 @@ app.whenReady().then(() => {
 //这个args是输入栏里的每一项参数
 ipcMain.on("start_button_click", (event, arg) => {
     console.log("start!");
-    console.log(arg);
+    // console.log(arg);
     runPythonScript(arg);
 });
 //trigger_devices是所有名字的集合体
@@ -123,24 +129,46 @@ ipcMain.on("action_device_change", (event, arg) => {
     win.webContents.send("update-action-execution", nameObj);
 });
 
-ipcMain.on("trigger_DAC_change", (event, select_trigger, select_account) => {
+ipcMain.on("trigger_condition_change", (event, select_trigger, select_trigger_condition, select_account) => {
+    let trigger_json = readJsonFile(
+        "../../data/electron_json/trigger/" + select_trigger + ".json"
+    );
+    win.webContents.send("update-trigger-device-info", trigger_json, select_trigger_condition, select_account);
+});
+
+ipcMain.on("query_content_change", (event, select_query, select_query_content, select_account) => {
+    let query_json = readJsonFile(
+        "../../data/electron_json/query/" + select_query + ".json"
+    );
+    win.webContents.send("update-query-device-info", query_json, select_query_content, select_account);
+});
+
+ipcMain.on("action_execution_change", (event, select_action, select_action_execution, select_account) => {
+    let action_json = readJsonFile(
+        "../../data/electron_json/action/" + select_action + ".json"
+    );
+    win.webContents.send("update-action-device-info", action_json, select_action_execution, select_account);
+});
+
+
+ipcMain.on("trigger_DAC_change", (event, select_trigger, select_trigger_condition, select_account) => {
     //此处可以直接传value值而不是text值
     let trigger_json = readJsonFile(
         "../../data/electron_json/trigger/" + select_trigger + ".json"
     );
-    win.webContents.send("update-trigger-DSN", trigger_json, select_account);
+    win.webContents.send("update-trigger-device-info", trigger_json, select_trigger_condition, select_account);
 });
 
-ipcMain.on("query_DAC_change", (event, select_query, select_account) => {
+ipcMain.on("query_DAC_change", (event, select_query, select_query_content, select_account) => {
     let query_json = readJsonFile(
         "../../data/electron_json/query/" + select_query + ".json"
     );
-    win.webContents.send("update-query-DSN", query_json, select_account);
+    win.webContents.send("update-query-device-info", query_json, select_query_content, select_account);
 });
 
-ipcMain.on("action_DAC_change", (event, select_action, select_account) => {
+ipcMain.on("action_DAC_change", (event, select_action, select_action_execution, select_account) => {
     let action_json = readJsonFile(
         "../../data/electron_json/action/" + select_action + ".json"
     );
-    win.webContents.send("update-action-DSN", action_json, select_account);
+    win.webContents.send("update-action-device-info", action_json, select_action_execution, select_account);
 });

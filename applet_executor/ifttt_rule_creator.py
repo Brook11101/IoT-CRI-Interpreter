@@ -18,23 +18,54 @@ class IftttRuleCreater(scrapy.Spider):
         self.trigger_device = kwargs["trigger_device"]
         self.trigger_condition = kwargs["trigger_condition"]
         self.trigger_DAC = kwargs["trigger_DAC"]
-        self.trigger_DSN = kwargs["trigger_DSN"]
+        self.trigger_device_info = kwargs["trigger_device_info"]
+
         self.query_device = kwargs["query_device"]
         self.query_content = kwargs["query_content"]
         self.query_DAC = kwargs["query_DAC"]
-        self.query_DSN = kwargs["query_DSN"]
+        self.query_device_info = kwargs["query_device_info"]
+
         self.action_device = kwargs["action_device"]
         self.action_execution = kwargs["action_execution"]
         self.action_DAC = kwargs["action_DAC"]
-        self.action_DSN = kwargs["action_DSN"]
+        self.action_device_info = kwargs["action_device_info"]
+
         self.is_pro = kwargs["is_pro"]
         self.priority = kwargs["priority"]
         self.rule_name = kwargs["rule_name"]
 
-        # 在DSN前面加上转义符号
-        self.trigger_DSN = "\"" + self.trigger_DSN + "\""
-        self.query_DSN = "\"" + self.query_DSN + "\""
-        self.action_DSN = "\"" + self.action_DSN + "\""
+        # 对于每一个value，需要在首位{}的前后加上”，对于{}内部的每一个”前加上转移符号、
+        self.trigger_info_data = json.loads(self.trigger_device_info)
+        for item in self.trigger_info_data:
+            modified_value = ""
+            for char in item["selectedValue"]:
+                if char == "\"":
+                    modified_value += "\\"
+                    modified_value += char
+                else:
+                    modified_value += char
+            item["selectedValue"] = "\"" + modified_value + "\""
+        self.query_info_data = json.loads(self.query_device_info)
+        for item in self.query_info_data:
+            modified_value = ""
+            for char in item["selectedValue"]:
+                if char == "\"":
+                    modified_value += "\\"
+                    modified_value += char
+                else:
+                    modified_value += char
+            item["selectedValue"] = "\"" + modified_value + "\""
+        self.action_info_data = json.loads(self.action_device_info)
+        for item in self.action_info_data:
+            modified_value = ""
+            for char in item["selectedValue"]:
+                if char == "\"":
+                    modified_value += "\\"
+                    modified_value += char
+                else:
+                    modified_value += char
+            item["selectedValue"] = "\"" + modified_value + "\""
+
 
         self.user_agent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.3"
         # load keys
@@ -54,27 +85,6 @@ class IftttRuleCreater(scrapy.Spider):
                 self.query_channel = item["id"]
             if (item["module_name"]) == self.action_device:
                 self.action_channel = item["id"]
-
-        with open(self.module_trigger_field_path+self.trigger_device+".json", "r") as f:
-            trigger_module = json.load(f)
-            for item in trigger_module["data"]["channel"]["public_triggers"]:
-                if self.trigger_condition == item["module_name"]:
-                    if item["trigger_fields"]:
-                        self.trigger_fields_name = item["trigger_fields"][0]["name"]
-
-        with open(self.module_query_field_path+self.query_device+".json", "r") as f:
-            query_module = json.load(f)
-            for item in query_module["data"]["channel"]["public_queries"]:
-                if self.query_content == item["module_name"]:
-                    if item["query_fields"]:
-                        self.query_fields_name = item["query_fields"][0]["name"]
-
-        with open(self.module_action_field_path+self.action_device+".json", "r") as f:
-            action_module = json.load(f)
-            for item in action_module["data"]["channel"]["public_actions"]:
-                if self.action_execution == item["module_name"]:
-                    if item["action_fields"]:
-                        self.action_fields_name = item["action_fields"][0]["name"]
 
     def parse(self, response):
         yield scrapy.FormRequest.from_response(
@@ -101,19 +111,34 @@ class IftttRuleCreater(scrapy.Spider):
         headers = {"Content-Type": "application/json", "User-Agent": self.user_agent,
                    "Authorization": 'Token jwt="' + self.authorization + '"'}
 
+        trigger_fields = []
+        for data in self.trigger_info_data:
+            field = {"name": data["label"], "hidden": False, "value": data["selectedValue"]}
+            trigger_fields.append(field)
+
+        query_fields = []
+        for data in self.query_info_data:
+            field = {"name": data["label"], "hidden": False, "value": data["selectedValue"]}
+            query_fields.append(field)
+
+        action_fields = []
+        for data in self.action_info_data:
+            field = {"name": data["label"], "hidden": False, "value": data["selectedValue"]}
+            action_fields.append(field)
+
         payload = {
             "query": "\n  mutation DIYCreateAppletMutation(\n    $name: String!\n    $description: String\n    $channel_id: ID!\n    $push_enabled: Boolean\n    $filter_code: String\n    $trigger: DiyTandaInput!\n    $queries: [DiyTandaInput]\n    $actions: [DiyTandaInput]!\n    $actions_delay: Int\n  ) {\n    diyAppletCreate(\n      input: {\n        name: $name\n        description: $description\n        channel_id: $channel_id\n        filter_code: $filter_code\n        push_enabled: $push_enabled\n        trigger: $trigger\n        queries: $queries\n        actions: $actions\n        actions_delay: $actions_delay\n      }\n    ) {\n      errors {\n        attribute\n        message\n      }\n      normalized_applet {\n        id\n      }\n    }\n  }\n",
             "variables": {"name": self.rule_name, "channel_id": self.trigger_channel,
                           "filter_code": "",
                           "trigger": {"step_identifier": self.trigger_device + "." + self.trigger_condition,
-                                      "fields": [{"name": self.trigger_fields_name, "hidden": False, "value": self.trigger_DSN}],
+                                      "fields": trigger_fields,
                                       "channel_id": self.trigger_channel, "live_channel_id": self.trigger_DAC},
                           "actions": [{"step_identifier": self.action_device + "." + self.action_execution,
-                                       "fields": [{"name": self.action_fields_name, "hidden": False, "value": self.action_DSN}],
+                                       "fields": action_fields,
                                        "channel_id": self.action_channel, "live_channel_id": self.action_DAC}],
                           "queries": [
                               {"step_identifier": self.query_device + "." + self.query_content,
-                               "fields": [{"name": self.query_fields_name, "hidden": False, "value": self.query_DSN}],
+                               "fields": query_fields,
                                "channel_id": self.query_channel, "live_channel_id": self.query_DAC}],
                           "actions_delay": 0},
         }
@@ -128,6 +153,9 @@ class IftttRuleCreater(scrapy.Spider):
 
     def check_rule_create(self, response):
         ret_data = response.json()
-        # print(ret_data)
-        if ret_data["data"]["diyAppletCreate"]["errors"] is None:
-            print("rule created successfully: " + ret_data["data"]["diyAppletCreate"]["normalized_applet"]["id"])
+        print(ret_data)
+
+        # if "data" in ret_data and "diyAppletCreate" in ret_data["data"] and "errors" in ret_data["data"]["diyAppletCreate"]:
+        #     # 在这里执行子脚本操作，因为字典的所有层次都存在
+        #     if ret_data["data"]["diyAppletCreate"]["errors"] is None:
+        #         print("rule created successfully: " + ret_data["data"]["diyAppletCreate"]["normalized_applet"]["id"])
