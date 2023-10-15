@@ -1,6 +1,7 @@
 import scrapy
 from scrapy.utils.response import open_in_browser
 import json
+import sys
 
 
 class IftttRuleCreater(scrapy.Spider):
@@ -33,6 +34,9 @@ class IftttRuleCreater(scrapy.Spider):
         self.is_pro = kwargs["is_pro"]
         self.priority = kwargs["priority"]
         self.rule_name = kwargs["rule_name"]
+        self.filter_code = kwargs["filter_code"]
+
+        self.logger.info("received filter code: " + self.filter_code)
 
         # 对于每一个value，需要在首位{}的前后加上”，对于{}内部的每一个”前加上转移符号、
         self.trigger_info_data = json.loads(self.trigger_device_info)
@@ -129,7 +133,7 @@ class IftttRuleCreater(scrapy.Spider):
         payload = {
             "query": "\n  mutation DIYCreateAppletMutation(\n    $name: String!\n    $description: String\n    $channel_id: ID!\n    $push_enabled: Boolean\n    $filter_code: String\n    $trigger: DiyTandaInput!\n    $queries: [DiyTandaInput]\n    $actions: [DiyTandaInput]!\n    $actions_delay: Int\n  ) {\n    diyAppletCreate(\n      input: {\n        name: $name\n        description: $description\n        channel_id: $channel_id\n        filter_code: $filter_code\n        push_enabled: $push_enabled\n        trigger: $trigger\n        queries: $queries\n        actions: $actions\n        actions_delay: $actions_delay\n      }\n    ) {\n      errors {\n        attribute\n        message\n      }\n      normalized_applet {\n        id\n      }\n    }\n  }\n",
             "variables": {"name": self.rule_name, "channel_id": self.trigger_channel,
-                          "filter_code": "",
+                          "filter_code": self.filter_code,
                           "trigger": {"step_identifier": self.trigger_device + "." + self.trigger_condition,
                                       "fields": trigger_fields,
                                       "channel_id": self.trigger_channel, "live_channel_id": self.trigger_DAC},

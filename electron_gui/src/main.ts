@@ -2,6 +2,7 @@ import {app, BrowserWindow, ipcMain} from "electron";
 import path = require("path");
 import {readJsonFile, searchModuleName} from "./json_loader";
 import {spawn} from "child_process";
+import { it } from "node:test";
 
 //页面变化时发送消息事件
 
@@ -21,6 +22,8 @@ interface PythonArgs {
     action_execution: string;
     action_DAC: string;
     action_device_info: object[];
+
+    filter_code: string;
 
     is_pro: boolean;
     priority: string;
@@ -49,6 +52,7 @@ function runPythonScript(args: PythonArgs) {
         "-a", "is_pro=" + String(args["is_pro"]),
         "-a", "priority=" + args.priority,
         "-a", "rule_name=" + args.rule_name,
+        "-a", "filter_code=" + args.filter_code,
         "../applet_executor/ifttt_rule_creator.py",
     ];
 
@@ -91,6 +95,41 @@ app.whenReady().then(() => {
     createWindow();
 });
 
+function toCamelCase(str: string): string {
+    return str.replace(/_([a-z])/g, function (g) { return g[1].toUpperCase(); });
+}
+
+ipcMain.on("load_filter_code_option", (event, arg: PythonArgs) => {
+    console.log('refresh_options!!')
+    console.log(arg)
+
+    let triggerObj = readJsonFile(
+        "../../data/electron_json/trigger/" + arg.trigger_device + ".json"
+    );
+    let trigger_ingredients_name = []
+    let trigger_ingredients = triggerObj.find((item: any) => item.module_name === arg.trigger_condition).ingredients;
+    for(let item of trigger_ingredients) {
+        trigger_ingredients_name.push(item.normalized_name)
+    }
+    win.webContents.send("update_filter_trigger_ingredient", trigger_ingredients_name);
+
+
+    let actionObj = readJsonFile(
+        "../../data/electron_json/action/" + arg.action_device + ".json"
+    );
+    let action_options_name = [toCamelCase(arg.action_execution) + ".skip()"]
+    win.webContents.send("update_filter_action_options", action_options_name);
+
+    let queryObj = readJsonFile(
+        "../../data/electron_json/query/" + arg.query_device + ".json"
+    );
+    let query_ingredients_name = []
+    let query_ingredients = queryObj.find((item: any) => item.module_name === arg.query_content).ingredients;
+    for(let item of query_ingredients) {
+        query_ingredients_name.push(item.normalized_name)
+    }
+    win.webContents.send("update_filter_query_ingredients", query_ingredients_name);
+})
 
 //这个args是输入栏里的每一项参数
 ipcMain.on("start_button_click", (event, arg) => {
@@ -172,3 +211,10 @@ ipcMain.on("action_DAC_change", (event, select_action, select_action_execution, 
     );
     win.webContents.send("update-action-device-info", action_json, select_action_execution, select_account);
 });
+
+ipcMain.handle('getEditorContent', async (event) => {
+    let win = BrowserWindow.getFocusedWindow(); // 获取当前聚焦的窗口
+    let result = await win.webContents.executeJavaScript('window.getEditorContent()');
+    return String(result);
+});
+

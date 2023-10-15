@@ -1,9 +1,9 @@
+window.editor = null;
+
 document.addEventListener("DOMContentLoaded", function () {
-    // 在页面加载完成后执行 JavaScript
-    // 创建 Monaco Editor 实例
     require.config({paths: {'vs': 'https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.23.0/min/vs'}});
     require(['vs/editor/editor.main'], function () {
-        var editor = monaco.editor.create(document.getElementById('editor'), {
+        window.editor = monaco.editor.create(document.getElementById('editor'), {
             value: '// Write your filter code here;',
             language: 'typescript',
             automaticLayout: true,
@@ -14,3 +14,7 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     });
 });
+
+window.getEditorContent = function() {
+    return window.editor ? window.editor.getValue() : "null!";
+}

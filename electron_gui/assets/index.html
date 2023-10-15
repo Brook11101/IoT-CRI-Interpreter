@@ -114,8 +114,37 @@
     </div>
 </div>
 
-<div id="editor"></div>
-<br/>
+<div class="editor-grid">
+    <div class="input-group">
+        <div id="editor"></div>
+    <!-- <br/> -->
+    </div>
+    <div class="input-group">
+        <button id="refresh_options">Refresh Options</button>
+        <p>Trigger ingredient</p>
+        <p>
+            <select id="filter_trigger_ingredient" class="minimal">
+                <option>Select a trigger condition</option>
+            </select>
+            <button id="copy_filter_trigger_ingredient">Copy to Clipboard</button>
+        </p>
+        <p>Query ingredient</p>
+        <p>
+            <select id="filter_query_ingredient" class="minimal">
+                <option>Select a query condition</option>
+            </select>
+            <button id="copy_filter_query_ingredient">Copy to Clipboard</button>
+        </p>
+        <p>Action option</p>
+        <p>
+            <select id="filter_action_option" class="minimal">
+                <option>Select a action condition</option>
+            </select>
+            <button id="copy_filter_action_option">Copy to Clipboard</button>
+        </p>
+    </div>
+</div>
+
 
 <div style="text-align: center">
     <button id="refresh_button">Refresh</button>

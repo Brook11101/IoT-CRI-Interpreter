@@ -34,7 +34,6 @@ function refreshDACSelect(elem: HTMLSelectElement, selectDict: object) {
     }
 }
 
-
 // 需要在这里加上数目动态变化的输入框（因为action fields里面数量是变化的）
 function refreshDSNSelect(elem: HTMLSelectElement, json_dict: object, select_account: string) {
     elem.innerHTML = "";
@@ -79,7 +78,7 @@ function refreshDeviceInfoSelect(elem: HTMLSelectElement, value_json_dict: objec
     }
 }
 
-function getAllSelects() {
+async function getAllSelects() {
     let trigger_device = document.getElementById(
         "trigger_device"
     ) as HTMLSelectElement;
@@ -132,6 +131,10 @@ function getAllSelects() {
         dynamic_action_device_info.push({label, selectedValue});
     });
 
+    let filter_code = await ipcRenderer.invoke('getEditorContent').then((content) => {
+        return String(content)
+    });
+    console.log("filter_code: " + filter_code)
 
     let rule_name = document.getElementById("rule_name_input") as HTMLInputElement;
     let is_pro = document.getElementById("pro_chk") as HTMLInputElement;
@@ -152,6 +155,8 @@ function getAllSelects() {
         action_execution: action_execution.options[action_execution.selectedIndex].value,
         action_DAC: action_DAC.options[action_DAC.selectedIndex].value,
         action_device_info: dynamic_action_device_info,
+
+        filter_code: filter_code,
 
         is_pro: is_pro.checked,
         priority: priority.options[priority.selectedIndex].text,
@@ -189,11 +194,16 @@ window.onload = () => {
     });
 
 
-    document.getElementById("start_button")?.addEventListener("click", () => {
-        ipcRenderer.send("start_button_click", getAllSelects());
+    document.getElementById("start_button")?.addEventListener("click", async () => {
+        let allSelects = await getAllSelects();
+        ipcRenderer.send("start_button_click", allSelects);
     });
     document.getElementById("refresh_button")?.addEventListener("click", () => {
         ipcRenderer.send("refresh_button_click");
+    });
+    document.getElementById("refresh_options")?.addEventListener("click", async () => {
+        let allSelects = await getAllSelects();
+        ipcRenderer.send("load_filter_code_option", allSelects);
     });
 
 
@@ -595,6 +605,75 @@ window.onload = () => {
                     }
                 }
             }
+        }
+    });
+
+    ipcRenderer.on("update_filter_trigger_ingredient", (event, arg) => {
+        let filter_trigger_ingredient_elem = document.getElementById(
+            "filter_trigger_ingredient"
+        ) as HTMLSelectElement;
+        filter_trigger_ingredient_elem.innerHTML = "";
+        for(let item of arg) {
+            let option = document.createElement("option");
+            option.value = item;
+            option.text = item;
+            filter_trigger_ingredient_elem.add(option);
+        }
+    });
+
+    document.getElementById('copy_filter_trigger_ingredient')!.addEventListener('click', async () => {
+        const filter_trigger_ingredient = document.getElementById(
+            "filter_trigger_ingredient"
+        ) as HTMLSelectElement;;
+        try {
+          await navigator.clipboard.writeText(filter_trigger_ingredient.options[filter_trigger_ingredient.selectedIndex].value);
+        } catch (err) {
+        }
+    });
+
+    ipcRenderer.on("update_filter_action_options", (event, arg) => {
+        let filter_action_option_elem = document.getElementById(
+            "filter_action_option"
+        ) as HTMLSelectElement;
+        filter_action_option_elem.innerHTML = "";
+        for(let item of arg) {
+            let option = document.createElement("option");
+            option.value = item;
+            option.text = item;
+            filter_action_option_elem.add(option);
+        }
+    });
+
+    document.getElementById('copy_filter_action_option')!.addEventListener('click', async () => {
+        const filter_action_option = document.getElementById(
+            "filter_action_option"
+        ) as HTMLSelectElement;;
+        try {
+          await navigator.clipboard.writeText(filter_action_option.options[filter_action_option.selectedIndex].value);
+        } catch (err) {
+        }
+    });
+
+    ipcRenderer.on("update_filter_query_ingredients", (event, arg) => {
+        let filter_query_ingredients_elem = document.getElementById(
+            "filter_query_ingredient"
+        ) as HTMLSelectElement;
+        filter_query_ingredients_elem.innerHTML = "";
+        for(let item of arg) {
+            let option = document.createElement("option");
+            option.value = item;
+            option.text = item;
+            filter_query_ingredients_elem.add(option);
+        }
+    });
+
+    document.getElementById('copy_filter_query_ingredient')!.addEventListener('click', async () => {
+        const filter_query_ingredient = document.getElementById(
+            "filter_query_ingredient"
+        ) as HTMLSelectElement;;
+        try {
+          await navigator.clipboard.writeText(filter_query_ingredient.options[filter_query_ingredient.selectedIndex].value);
+        } catch (err) {
         }
     });
 };
