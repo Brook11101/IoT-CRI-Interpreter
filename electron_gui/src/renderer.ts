@@ -134,7 +134,6 @@ async function getAllSelects() {
     let filter_code = await ipcRenderer.invoke('getEditorContent').then((content) => {
         return String(content)
     });
-    console.log("filter_code: " + filter_code)
 
     let rule_name = document.getElementById("rule_name_input") as HTMLInputElement;
     let is_pro = document.getElementById("pro_chk") as HTMLInputElement;
@@ -613,7 +612,7 @@ window.onload = () => {
             "filter_trigger_ingredient"
         ) as HTMLSelectElement;
         filter_trigger_ingredient_elem.innerHTML = "";
-        for(let item of arg) {
+        for (let item of arg) {
             let option = document.createElement("option");
             option.value = item;
             option.text = item;
@@ -624,9 +623,9 @@ window.onload = () => {
     document.getElementById('copy_filter_trigger_ingredient')!.addEventListener('click', async () => {
         const filter_trigger_ingredient = document.getElementById(
             "filter_trigger_ingredient"
-        ) as HTMLSelectElement;;
+        ) as HTMLSelectElement;
         try {
-          await navigator.clipboard.writeText(filter_trigger_ingredient.options[filter_trigger_ingredient.selectedIndex].value);
+            await navigator.clipboard.writeText(filter_trigger_ingredient.options[filter_trigger_ingredient.selectedIndex].value);
         } catch (err) {
         }
     });
@@ -636,7 +635,7 @@ window.onload = () => {
             "filter_action_option"
         ) as HTMLSelectElement;
         filter_action_option_elem.innerHTML = "";
-        for(let item of arg) {
+        for (let item of arg) {
             let option = document.createElement("option");
             option.value = item;
             option.text = item;
@@ -647,9 +646,9 @@ window.onload = () => {
     document.getElementById('copy_filter_action_option')!.addEventListener('click', async () => {
         const filter_action_option = document.getElementById(
             "filter_action_option"
-        ) as HTMLSelectElement;;
+        ) as HTMLSelectElement;
         try {
-          await navigator.clipboard.writeText(filter_action_option.options[filter_action_option.selectedIndex].value);
+            await navigator.clipboard.writeText(filter_action_option.options[filter_action_option.selectedIndex].value);
         } catch (err) {
         }
     });
@@ -659,7 +658,7 @@ window.onload = () => {
             "filter_query_ingredient"
         ) as HTMLSelectElement;
         filter_query_ingredients_elem.innerHTML = "";
-        for(let item of arg) {
+        for (let item of arg) {
             let option = document.createElement("option");
             option.value = item;
             option.text = item;
@@ -670,9 +669,9 @@ window.onload = () => {
     document.getElementById('copy_filter_query_ingredient')!.addEventListener('click', async () => {
         const filter_query_ingredient = document.getElementById(
             "filter_query_ingredient"
-        ) as HTMLSelectElement;;
+        ) as HTMLSelectElement;
         try {
-          await navigator.clipboard.writeText(filter_query_ingredient.options[filter_query_ingredient.selectedIndex].value);
+            await navigator.clipboard.writeText(filter_query_ingredient.options[filter_query_ingredient.selectedIndex].value);
         } catch (err) {
         }
     });

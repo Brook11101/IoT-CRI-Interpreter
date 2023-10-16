@@ -2,7 +2,7 @@ import {app, BrowserWindow, ipcMain} from "electron";
 import path = require("path");
 import {readJsonFile, searchModuleName} from "./json_loader";
 import {spawn} from "child_process";
-import { it } from "node:test";
+import {it} from "node:test";
 
 //页面变化时发送消息事件
 
@@ -96,19 +96,19 @@ app.whenReady().then(() => {
 });
 
 function toCamelCase(str: string): string {
-    return str.replace(/_([a-z])/g, function (g) { return g[1].toUpperCase(); });
+    return str.replace(/_([a-z])/g, function (g) {
+        return g[1].toUpperCase();
+    });
 }
 
 ipcMain.on("load_filter_code_option", (event, arg: PythonArgs) => {
-    console.log('refresh_options!!')
-    console.log(arg)
 
     let triggerObj = readJsonFile(
         "../../data/electron_json/trigger/" + arg.trigger_device + ".json"
     );
     let trigger_ingredients_name = []
     let trigger_ingredients = triggerObj.find((item: any) => item.module_name === arg.trigger_condition).ingredients;
-    for(let item of trigger_ingredients) {
+    for (let item of trigger_ingredients) {
         trigger_ingredients_name.push(item.normalized_name)
     }
     win.webContents.send("update_filter_trigger_ingredient", trigger_ingredients_name);
@@ -125,7 +125,7 @@ ipcMain.on("load_filter_code_option", (event, arg: PythonArgs) => {
     );
     let query_ingredients_name = []
     let query_ingredients = queryObj.find((item: any) => item.module_name === arg.query_content).ingredients;
-    for(let item of query_ingredients) {
+    for (let item of query_ingredients) {
         query_ingredients_name.push(item.normalized_name)
     }
     win.webContents.send("update_filter_query_ingredients", query_ingredients_name);
